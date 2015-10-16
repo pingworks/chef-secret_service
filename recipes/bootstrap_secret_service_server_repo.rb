@@ -30,6 +30,12 @@ cookbook_file '/tmp/userlist.csv' do
   mode 00600
 end
 
+cookbook_file '/tmp/testuser_authorized_keys'
+cookbook_file '/tmp/testuser_password'
+cookbook_file '/tmp/testuser_password_sha512'
+cookbook_file '/tmp/testuser_id_rsa'
+cookbook_file '/tmp/testuser_id_rsa.pub'
+
 template '/opt/secret-service/bin/ssc-bootstrap-secret-service-server-repo.sh' do
   owner 'root'
   group 'root'
