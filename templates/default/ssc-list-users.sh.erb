@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SECRET_SERVICE_CLIENT_REPO=<%= node['secret_service']['client']['repo']%>
+
+# define concrete backend here:
+if [ -f /etc/secret_service/client.conf ];then
+  . /etc/secret_service/client.conf
+fi
+
+ls -1 ${SECRET_SERVICE_CLIENT_REPO}/user | sort | tr '\n' ','
