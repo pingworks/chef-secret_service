@@ -1,5 +1,5 @@
 default['secret_service']['domain'] = 'sampleworkshop'
-default['secret_service']['accessuser'] = 'secret-sampleworkshop'
+default['secret_service']['accessuser'] = 'secret-admin'
 default['secret_service']['accessuserkey'] = '/tmp/id_rsa'
 default['secret_service']['server']['host'] = 'belharra.pingworks.net'
 default['secret_service']['server']['repo'] = '/var/lib/secret-service-server'

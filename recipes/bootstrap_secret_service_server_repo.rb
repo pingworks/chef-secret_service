@@ -6,6 +6,12 @@
 # Licensed under the Apache License, Version 2.0
 #
 
+cookbook_file '/tmp/userlist.csv' do
+  owner 'root'
+  group 'root'
+  mode 00600
+end
+
 package 'pwgen'
 package 'whois'
 package 'rsync'
@@ -24,13 +30,6 @@ cookbook_file '/tmp/id_rsa' do
   mode 00600
 end
 
-cookbook_file '/tmp/userlist.csv' do
-  owner 'root'
-  group 'root'
-  mode 00600
-end
-
-cookbook_file '/tmp/testuser_authorized_keys'
 cookbook_file '/tmp/testuser_password'
 cookbook_file '/tmp/testuser_password_sha512'
 cookbook_file '/tmp/testuser_id_rsa'
