@@ -30,10 +30,11 @@ cookbook_file '/tmp/id_rsa' do
   mode 00600
 end
 
-cookbook_file '/tmp/testuser_password'
-cookbook_file '/tmp/testuser_password_sha512'
-cookbook_file '/tmp/testuser_id_rsa'
-cookbook_file '/tmp/testuser_id_rsa.pub'
+# not longer required, preset in workshop-tpl on the secret-service server
+# cookbook_file '/tmp/testuser_password'
+# cookbook_file '/tmp/testuser_password_sha512'
+# cookbook_file '/tmp/testuser_id_rsa'
+# cookbook_file '/tmp/testuser_id_rsa.pub'
 
 template '/opt/secret-service/bin/ssc-bootstrap-secret-service-server-repo.sh' do
   owner 'root'
