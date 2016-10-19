@@ -39,11 +39,11 @@ for U in $SECRET_SERVICE_IGNORE_USERS;do
   EXCLUDE="$EXCLUDE --exclude $U/"
 done
 
-echo "rsync -avxz --delete $EXCLUDE -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+echo "rsync -avxz --delete $EXCLUDE --exclude=testuser -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
 ${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST}:${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/user/ \
 ${SECRET_SERVICE_CLIENT_REPO}/user/"
 
-rsync -avxz --delete $EXCLUDE -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+rsync -avxz --delete $EXCLUDE --exclude=testuser -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
 ${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST}:${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/user/ \
 ${SECRET_SERVICE_CLIENT_REPO}/user/
 
@@ -53,17 +53,8 @@ if [ $? -ne 0 ];then
 fi
 
 chown -R root.root ${SECRET_SERVICE_CLIENT_REPO}
-find ${SECRET_SERVICE_CLIENT_REPO} -type d -print | xargs chmod 755
-find ${SECRET_SERVICE_CLIENT_REPO} -name .ssh -type d -print | xargs chmod 700
-find ${SECRET_SERVICE_CLIENT_REPO} -type f -print | xargs chmod 644
-find ${SECRET_SERVICE_CLIENT_REPO} -name id_rsa -print | xargs chmod 600
-find ${SECRET_SERVICE_CLIENT_REPO} -name id_rsa.pub -print | xargs chmod 600
-find ${SECRET_SERVICE_CLIENT_REPO} -name authorized_keys -print | xargs chmod 600
-find ${SECRET_SERVICE_CLIENT_REPO} -name password_sha512 -print | xargs chmod 600
-find ${SECRET_SERVICE_CLIENT_REPO} -name password -print | xargs chmod 600
 
-
-for U in $(ls -1 ${SECRET_SERVICE_CLIENT_REPO}/user | sort);<!DOCTYPE html>
+for U in $(ls -1 ${SECRET_SERVICE_CLIENT_REPO}/user | sort);do
   echo
   echo
   echo
