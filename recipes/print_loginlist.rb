@@ -36,6 +36,6 @@ bash 'call scc-print-loginlist' do
   user 'root'
   cwd '/tmp'
   code <<-EOH
-  scc-print-loginlist
+  bash /opt/secret_service/bin/ssc-print-loginlist.sh
   EOH
 end
