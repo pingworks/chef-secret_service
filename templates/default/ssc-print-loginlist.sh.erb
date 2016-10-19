@@ -39,11 +39,11 @@ for U in $SECRET_SERVICE_IGNORE_USERS;do
   EXCLUDE="$EXCLUDE --exclude $U/"
 done
 
-echo "rsync -avxz --delete $EXCLUDE --exclude=testuser -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+echo "rsync -avxz --delete $EXCLUDE --exclude=testuser --exclude=pingworks -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
 ${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST}:${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/user/ \
 ${SECRET_SERVICE_CLIENT_REPO}/user/"
 
-rsync -avxz --delete $EXCLUDE --exclude=testuser -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+rsync -avxz --delete $EXCLUDE --exclude=testuser --exclude=pingworks -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
 ${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST}:${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/user/ \
 ${SECRET_SERVICE_CLIENT_REPO}/user/
 
@@ -59,8 +59,8 @@ for U in $(ls -1 ${SECRET_SERVICE_CLIENT_REPO}/user | sort);do
   echo
   echo
   echo "$(<${SECRET_SERVICE_CLIENT_REPO}/user/${U}/firstname) $(<${SECRET_SERVICE_CLIENT_REPO}/user/${U}/lastname)"
-  echo $U
-  cat ${SECRET_SERVICE_CLIENT_REPO}/user/${U}/password
+  echo "Username: $U"
+  echo "Password: $(<${SECRET_SERVICE_CLIENT_REPO}/user/${U}/password)"
   echo
   echo
   echo
