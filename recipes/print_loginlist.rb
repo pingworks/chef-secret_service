@@ -24,4 +24,10 @@ link '/usr/local/bin/ssc-print-loginlist' do
   to '/opt/secret_service/bin/ssc-print-loginlist.sh'
 end
 
-exec '/opt/secret_service/bin/ssc-print-loginlist.sh'
+bash 'call scc-print-loginlist' do
+  user 'root'
+  cwd '/tmp'
+  code <<-EOH
+  scc-print-loginlist
+  EOH
+end
