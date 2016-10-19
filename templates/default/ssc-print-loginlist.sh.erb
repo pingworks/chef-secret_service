@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# default backend
+SECRET_SERVICE_DOMAIN=<%= node['secret_service']['domain'] %>
+SECRET_SERVICE_ACCESSUSER=<%= node['secret_service']['accessuser'] %>
+SECRET_SERVICE_ACCESSUSERKEY=<%= node['secret_service']['accessuserkey']  %>
+SECRET_SERVICE_IGNORE_USERS="<%= node['secret_service']['ignore_users']  %>"
+
+SECRET_SERVICE_SERVER_HOST=<%= node['secret_service']['server']['host'] %>
+SECRET_SERVICE_SERVER_REPO=<%= node['secret_service']['server']['repo'] %>
+
+SECRET_SERVICE_CLIENT_USER=<%= node['secret_service']['client']['user'] %>
+SECRET_SERVICE_CLIENT_REPO=<%= node['secret_service']['client']['repo']%>
+
+# define concrete backend here:
+if [ -f /etc/secret_service/client.conf ];then
+  . /etc/secret_service/client.conf
+fi
+
+if [ ! -f ${SECRET_SERVICE_ACCESSUSERKEY} ];then
+  echo "-----------------------------------------------"
+  echo "ERROR: Access Keyfile not found!"
+  echo "Please put a id_rsa private keyfile at"
+  echo "${SECRET_SERVICE_ACCESSUSERKEY}"
+  echo "and test the login with:"
+  echo "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} ${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST} \"cat ${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/userlist.csv\""
+  echo "-----------------------------------------------"
+  exit 1
+fi
+
+if [ ! -d "${SECRET_SERVICE_CLIENT_REPO}" ];then
+  mkdir -p ${SECRET_SERVICE_CLIENT_REPO}/user
+  chown -R ${SECRET_SERVICE_CLIENT_USER}.${SECRET_SERVICE_CLIENT_USER} ${SECRET_SERVICE_CLIENT_REPO}
+  chmod -R 0700 ${SECRET_SERVICE_CLIENT_REPO}
+fi
+
+EXCLUDE=""
+for U in $SECRET_SERVICE_IGNORE_USERS;do
+  EXCLUDE="$EXCLUDE --exclude $U/"
+done
+
+echo "rsync -avxz --delete --exclude password $EXCLUDE -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST}:${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/user/ \
+${SECRET_SERVICE_CLIENT_REPO}/user/"
+
+rsync -avxz --delete $EXCLUDE -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST}:${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/user/ \
+${SECRET_SERVICE_CLIENT_REPO}/user/
+
+if [ $? -ne 0 ];then
+  echo 'ERROR: Failed to fetch secrets from secret-server!'
+  exit 1
+fi
+
+chown -R root.root ${SECRET_SERVICE_CLIENT_REPO}
+find ${SECRET_SERVICE_CLIENT_REPO} -type d -print | xargs chmod 755
+find ${SECRET_SERVICE_CLIENT_REPO} -name .ssh -type d -print | xargs chmod 700
+find ${SECRET_SERVICE_CLIENT_REPO} -type f -print | xargs chmod 644
+find ${SECRET_SERVICE_CLIENT_REPO} -name id_rsa -print | xargs chmod 600
+find ${SECRET_SERVICE_CLIENT_REPO} -name id_rsa.pub -print | xargs chmod 600
+find ${SECRET_SERVICE_CLIENT_REPO} -name authorized_keys -print | xargs chmod 600
+find ${SECRET_SERVICE_CLIENT_REPO} -name password_sha512 -print | xargs chmod 600
+find ${SECRET_SERVICE_CLIENT_REPO} -name password -print | xargs chmod 600
+
+
+for U in $(ls -1 ${SECRET_SERVICE_CLIENT_REPO}/user | sort);<!DOCTYPE html>
+  echo
+  echo
+  echo
+  echo "$(<${SECRET_SERVICE_CLIENT_REPO}/user/${U}/firstname) $(<${SECRET_SERVICE_CLIENT_REPO}/user/${U}/lastname)"
+  echo $U
+  cat ${SECRET_SERVICE_CLIENT_REPO}/user/${U}/password
+  echo
+  echo
+  echo
+  echo "---------------------------------------------------------------------"
+done
