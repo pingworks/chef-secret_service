@@ -39,7 +39,7 @@ for U in $SECRET_SERVICE_IGNORE_USERS;do
   EXCLUDE="$EXCLUDE --exclude $U/"
 done
 
-echo "rsync -avxz --delete --exclude password $EXCLUDE -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+echo "rsync -avxz --delete $EXCLUDE -e "ssh -i ${SECRET_SERVICE_ACCESSUSERKEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
 ${SECRET_SERVICE_ACCESSUSER}@${SECRET_SERVICE_SERVER_HOST}:${SECRET_SERVICE_SERVER_REPO}/${SECRET_SERVICE_DOMAIN}/user/ \
 ${SECRET_SERVICE_CLIENT_REPO}/user/"
 
