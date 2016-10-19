@@ -7,6 +7,7 @@
 #
 
 package 'pwgen'
+package 'rsync'
 
 cookbook_file '/tmp/id_rsa' do
   owner 'root'
