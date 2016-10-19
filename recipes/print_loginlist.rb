@@ -24,4 +24,4 @@ link '/usr/local/bin/ssc-print-loginlist' do
   to '/opt/secret_service/bin/ssc-print-loginlist.sh'
 end
 
-exec 'opt/secret_service/bin/ssc-print-loginlist.sh'
+exec '/opt/secret_service/bin/ssc-print-loginlist.sh'
