@@ -14,6 +14,14 @@ cookbook_file '/tmp/id_rsa' do
   mode 00600
 end
 
+directory '/opt/secret_service/bin' do
+  owner 'root'
+  group 'root'
+  mode 00755
+  recursive true
+  action :create
+end
+
 template '/opt/secret_service/bin/ssc-print-loginlist.sh' do
   owner 'root'
   group 'root'
