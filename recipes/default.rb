@@ -6,6 +6,9 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+
+include_recipe 'apt'
+
 package 'vim'
 
 # installs all ssc cmd line tools
