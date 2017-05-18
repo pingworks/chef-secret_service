@@ -4,6 +4,6 @@ maintainer_email 'birk@pingworks.de'
 license 'Apache 2.0'
 description 'Installs/Configures secret_service'
 long_description 'Installs/Configures secret_service'
-version '0.2.12'
+version '0.2.13'
 
-depends 'apt'
+depends 'apt', '~> 5.1.0'
